@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lai Long Master Wyckoff</title>
+  <meta name="description" content="Hệ thống phân tích Wyckoff & VSA đa khung: pha, cấu trúc, cung cầu, nỗ lực – kết quả, nhân – quả và 3 kịch bản giao dịch.">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=7">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#analysis">
+      <img src="assets/logo.svg" alt="" width="34" height="34">
+      <span class="brand-text"><b>Lai Long</b><small>Master Wyckoff</small></span>
+    </a>
+    <nav id="nav" class="nav"></nav>
+    <div class="top-actions">
+      <button id="langBtn" class="btn ghost" title="Language">EN</button>
+      <button id="themeBtn" class="btn ghost" title="Theme" aria-label="Theme">◐</button>
+    </div>
+  </header>
+
+  <div id="controls" class="controls"></div>
+  <div id="status" class="status" hidden></div>
+
+  <main>
+    <section id="view-analysis" class="view">
+      <div class="grid-analysis">
+        <div class="card chart-card">
+          <div class="chart-head" id="chartHead"></div>
+          <div id="chart" class="chart-wrap"></div>
+          <div class="chart-toggles" id="toggles"></div>
+        </div>
+        <aside class="side">
+          <div class="card" id="summary"></div>
+          <div class="card" id="scenarios"></div>
+        </aside>
+      </div>
+      <div class="card narrative" id="narrative"></div>
+    </section>
+
+    <section id="view-mtf" class="view">
+      <div class="card"><div id="mtfTable"></div></div>
+      <div class="card narrative" id="mtfStory"></div>
+    </section>
+
+    <section id="view-knowledge" class="view">
+      <div class="kb">
+        <nav class="card kb-toc" id="kbToc"></nav>
+        <article class="card kb-body" id="kbBody"></article>
+      </div>
+    </section>
+
+    <section id="view-checklist" class="view">
+      <div class="card" id="checklist"></div>
+    </section>
+
+    <section id="view-guide" class="view">
+      <div class="card guide" id="guide"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p id="disclaimer"></p>
+    <p><span>© Lai Long Master Wyckoff</span> · <a href="https://www.tradingview.com/lightweight-charts/" target="_blank" rel="noopener" id="chartCredit"></a></p>
+  </footer>
+
+  <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+  <script src="js/core.js?v=7"></script>
+  <script src="js/indicators.js?v=7"></script>
+  <script src="js/vsa.js?v=7"></script>
+  <script src="js/wyckoff.js?v=7"></script>
+  <script src="js/narrative.js?v=7"></script>
+  <script src="js/data.js?v=7"></script>
+  <script src="js/schematics.js?v=7"></script>
+  <script src="js/knowledge.js?v=7"></script>
+  <script src="js/chart.js?v=7"></script>
+  <script src="js/app.js?v=7"></script>
+</body>
+</html>
