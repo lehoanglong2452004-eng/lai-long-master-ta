@@ -333,3 +333,14 @@ textarea { width: 100%; min-height: 140px; background: var(--panel2); border: 1p
 .rr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .rr-grid .demo-chart { height: 260px; }
 @media (max-width: 640px) { .rr-grid { grid-template-columns: 1fr; } }
+
+.q.ok { border-color: color-mix(in srgb, var(--up) 55%, var(--line)); }
+.q.bad { border-color: color-mix(in srgb, var(--down) 55%, var(--line)); }
+.q .tag { margin-right: 4px; color: var(--accent2); border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+.q-result { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel2); margin-top: 6px; }
+.q-result.pass { border-color: var(--up); } .q-result.fail { border-color: var(--down); }
+.q-result .q-actions { margin-top: 10px; }
+.q-actions { width: 100%; }
+.locked { text-align: center; padding: 40px 10px; }
+.locked .lk-icon { font-size: 46px; }
+[data-nextnav] { opacity: .6; cursor: not-allowed; }

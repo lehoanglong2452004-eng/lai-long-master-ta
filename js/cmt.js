@@ -44,49 +44,100 @@
   };
   F.row = (...figs) => `<div class="fig-row">${figs.join('')}</div>`;
 
-  /* ---------- quiz ---------- */
-  function quizHtml(lessonId, qs) {
-    const p = prog();
-    const best = p.quiz[lessonId];
-    return `<section class="quiz" data-quiz="${lessonId}">
-      <h2>${L.T('Câu hỏi tự kiểm tra', 'Self-check questions')}</h2>
-      <p class="muted">${L.T('Chọn đáp án cho từng câu rồi bấm "Chấm điểm". Đạt từ 80% trở lên để chuyển sang bài kế tiếp.', 'Answer every question, then press "Grade". Score 80% or more before moving on.')}${best != null ? ` · ${L.T('Điểm cao nhất', 'Best score')}: <b>${best}%</b>` : ''}</p>
-      ${qs.map((q, k) => `<div class="q" data-a="${q.a}">
-        <p class="q-t"><b>${k + 1}.</b> ${q.q}</p>
-        ${q.o.map((o, j) => `<label class="q-o"><input type="radio" name="${lessonId}-q${k}" value="${j}"><span>${String.fromCharCode(65 + j)}. ${o}</span></label>`).join('')}
-        <p class="q-ex" hidden>${q.e}</p></div>`).join('')}
-      <div class="q-actions"><button class="btn primary" data-grade>${L.T('Chấm điểm', 'Grade')}</button><button class="btn ghost" data-retry>${L.T('Làm lại', 'Retry')}</button><span class="q-score"></span></div>
-    </section>`;
+  /* ---------- quiz: own questions + review questions from lower levels, shuffled, 80% to pass ---------- */
+  const PASS = 0.8;
+  // per level: own questions per lesson and review questions drawn from lower levels
+  C.QUIZ_CFG = { 1: { own: 10, review: {} }, 2: { own: 20, review: { 1: 10 } }, 3: { own: 30, review: { 2: 10, 1: 10 } } };
+  const shuffle = a => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+  const quizOf = id => { const ls = C.lessons[id]; return ((L.lang === 'en' && ls.en) ? ls.en : ls.vi).quiz; };
+  function levelPool(level) {
+    return lessonList(level).filter(l => C.lessons[l.id]).flatMap(l => quizOf(l.id).map(q => Object.assign({ from: l.no }, q)));
   }
+  function buildQuiz(id) {
+    const level = +id[1], cfg = C.QUIZ_CFG[level] || C.QUIZ_CFG[1];
+    const own = shuffle(quizOf(id)).slice(0, cfg.own).map(q => Object.assign({ tag: '' }, q));
+    let review = [];
+    Object.keys(cfg.review).forEach(lv => {
+      review = review.concat(shuffle(levelPool(+lv)).slice(0, cfg.review[lv]).map(q => Object.assign({ tag: L.T('Ôn tập Level ', 'Review Level ') + lv + ' · ' + L.T('Bài ', 'Lesson ') + q.from }, q)));
+    });
+    // shuffle answer order so positions cannot be memorised
+    return own.concat(review).map(q => {
+      const order = shuffle(q.o.map((_, j) => j));
+      return { q: q.q, e: q.e, tag: q.tag, o: order.map(j => q.o[j]), a: order.indexOf(q.a) };
+    });
+  }
+  function quizInner(lessonId) {
+    const p = prog(), qs = buildQuiz(lessonId), need = Math.ceil(qs.length * PASS), best = p.quiz[lessonId];
+    return `<h2>${L.T('Bài kiểm tra cuối bài', 'End-of-lesson test')}</h2>
+      <p class="muted">${L.T(`${qs.length} câu. Cần đúng ít nhất <b>${need}/${qs.length}</b> để mở khoá bài kế tiếp. Thứ tự câu hỏi và đáp án được xáo trộn mỗi lần làm.`, `${qs.length} questions. Score at least <b>${need}/${qs.length}</b> to unlock the next lesson. Questions and answers are shuffled every attempt.`)}${best != null ? ` · ${L.T('Điểm cao nhất', 'Best')}: <b>${best}%</b>` : ''}${p.done[lessonId] ? ` · <span class="up">✓ ${L.T('đã đạt', 'passed')}</span>` : ''}</p>
+      ${qs.map((q, k) => `<div class="q" data-a="${q.a}">
+        <p class="q-t"><b>${k + 1}.</b> ${q.tag ? `<span class="tag">${q.tag}</span> ` : ''}${q.q}</p>
+        ${q.o.map((o, j) => `<label class="q-o"><input type="radio" name="${lessonId}-q${k}" value="${j}"><span>${String.fromCharCode(65 + j)}. ${o}</span></label>`).join('')}
+        <p class="q-ex" hidden>${q.e || ''}</p></div>`).join('')}
+      <div class="q-actions"><button class="btn primary" data-grade>${L.T('Nộp bài & chấm điểm', 'Submit & grade')}</button><span class="q-score"></span></div>`;
+  }
+  function quizHtml(lessonId) { return `<section class="quiz" data-quiz="${lessonId}">${quizInner(lessonId)}</section>`; }
   function bindQuiz(root) {
     const box = root.querySelector('[data-quiz]');
     if (!box) return;
     const id = box.dataset.quiz;
     box.querySelector('[data-grade]').onclick = () => {
       const qs = [...box.querySelectorAll('.q')];
+      const blank = qs.filter(q => !q.querySelector('input:checked')).length;
+      if (blank && !confirmBlank(box, blank)) return;
       let ok = 0;
       qs.forEach(q => {
         const sel = q.querySelector('input:checked');
         const a = +q.dataset.a;
         q.querySelectorAll('.q-o').forEach((lab, j) => { lab.classList.toggle('right', j === a); lab.classList.toggle('wrong', !!sel && +sel.value === j && j !== a); });
+        q.querySelectorAll('input').forEach(i => { i.disabled = true; });
+        q.classList.add(sel && +sel.value === a ? 'ok' : 'bad');
         q.querySelector('.q-ex').hidden = false;
         if (sel && +sel.value === a) ok++;
       });
-      const score = Math.round(ok / qs.length * 100);
+      const total = qs.length, need = Math.ceil(total * PASS), score = Math.round(ok / total * 100), pass = ok >= need;
       const p = prog();
       p.quiz[id] = Math.max(p.quiz[id] || 0, score);
-      if (score >= 80) p.done[id] = true;
+      if (pass) p.done[id] = true;
       saveProg(p);
-      box.querySelector('.q-score').innerHTML = `${ok}/${qs.length} · <b class="${score >= 80 ? 'up' : 'down'}">${score}%</b> ${score >= 80 ? L.T('— Đạt, bài học đã được đánh dấu hoàn thành.', '— Passed, lesson marked complete.') : L.T('— Chưa đạt, hãy đọc lại phần giải thích.', '— Not yet, review the explanations.')}`;
+      const next = nextLesson(id);
+      box.querySelector('[data-grade]').remove();
+      box.querySelector('.q-score').innerHTML = `<div class="q-result ${pass ? 'pass' : 'fail'}">
+        <b>${ok}/${total}</b> ${L.T('câu đúng', 'correct')} (${score}%) — ${pass ? L.T('<b class="up">ĐẠT</b>. Bài kế tiếp đã được mở khoá.', '<b class="up">PASSED</b>. The next lesson is unlocked.') : L.T(`<b class="down">CHƯA ĐẠT</b> (cần ${need}/${total}). Xem lại giải thích từng câu rồi làm lại.`, `<b class="down">NOT YET</b> (need ${need}/${total}). Review the explanations and retry.`)}
+        <div class="q-actions"><button class="btn" data-retry>↻ ${L.T('Làm lại (câu hỏi mới xáo trộn)', 'Retry (reshuffled)')}</button>${pass && next ? `<a class="btn primary" href="#cmt/${next.id}">${L.T('Sang bài', 'Go to lesson')} ${next.no} →</a>` : ''}</div></div>`;
+      box.querySelector('[data-retry]').onclick = () => { box.innerHTML = quizInner(id); bindQuiz(root); box.scrollIntoView({ block: 'start' }); };
+      box.querySelector('.q-result').scrollIntoView({ block: 'center' });
       renderToc();
-    };
-    box.querySelector('[data-retry]').onclick = () => {
-      box.querySelectorAll('input').forEach(i => { i.checked = false; });
-      box.querySelectorAll('.q-o').forEach(l => l.classList.remove('right', 'wrong'));
-      box.querySelectorAll('.q-ex').forEach(e => { e.hidden = true; });
-      box.querySelector('.q-score').textContent = '';
+      const nav = document.querySelector('[data-nextnav]');
+      if (nav && pass && next) nav.outerHTML = `<a class="btn primary" href="#cmt/${next.id}">${L.T('Bài', 'Lesson')} ${next.no} →</a>`;
     };
   }
+  function confirmBlank(box, n) {
+    const s = box.querySelector('.q-score');
+    if (s.dataset.warned) return true;
+    s.dataset.warned = '1';
+    s.innerHTML = `<span class="down">${L.T(`Còn ${n} câu chưa chọn đáp án. Bấm "Nộp bài" lần nữa để vẫn chấm điểm.`, `${n} question(s) unanswered. Press submit again to grade anyway.`)}</span>`;
+    return false;
+  }
+
+  /* ---------- unlock rules ---------- */
+  function levelUnlocked(n) {
+    if (n === 1) return true;
+    const prev = lessonList(n - 1), p = prog();
+    return prev.length > 0 && prev.every(l => p.done[l.id]);
+  }
+  function unlocked(id) {
+    const level = +id[1];
+    if (!levelUnlocked(level)) return false;
+    const all = lessonList(level), k = all.findIndex(l => l.id === id);
+    const prev = all.slice(0, k).reverse().find(l => C.lessons[l.id]);
+    return !prev || !!prog().done[prev.id];
+  }
+  function nextLesson(id) {
+    const all = lessonList(+id[1]), k = all.findIndex(l => l.id === id);
+    return all.slice(k + 1).find(l => C.lessons[l.id]);
+  }
+  C.unlocked = unlocked;
 
   /* ---------- live demos ---------- */
   const demos = [];
@@ -262,7 +313,7 @@
     if (!toc) return;
     const p = prog();
     const lv = C.levels[cur.level];
-    const levels = [1, 2, 3].map(n => `<button class="lv ${n === cur.level ? 'active' : ''}" data-lv="${n}" ${C.levels[n] ? '' : 'disabled'}>Level ${n}${C.levels[n] ? '' : ' 🔒'}</button>`).join('');
+    const levels = [1, 2, 3].map(n => { const open = C.levels[n] && levelUnlocked(n); return `<button class="lv ${n === cur.level ? 'active' : ''}" data-lv="${n}" ${open ? '' : 'disabled'} title="${open ? '' : L.T('Hoàn thành toàn bộ Level trước để mở khoá', 'Complete the previous level to unlock')}">Level ${n}${open ? '' : ' 🔒'}</button>`; }).join('');
     let body = '';
     if (lv) {
       const all = lessonList(cur.level), ready = all.filter(l => C.lessons[l.id]), done = all.filter(l => p.done[l.id]);
@@ -270,9 +321,9 @@
         <span class="muted">${L.T('Hoàn thành', 'Completed')} ${done.length}/${all.length} · ${L.T('đã biên soạn', 'written')} ${ready.length}</span></div>
         <button class="toc-link ${!cur.lesson ? 'active' : ''}" data-ls="">🧭 ${L.T('Lộ trình Level', 'Level roadmap')} ${cur.level}</button>` +
         lv.parts.map(part => `<div class="toc-part">${tx(part.title)}</div>` + part.lessons.map(l => {
-          const ok = !!C.lessons[l.id];
-          return `<button class="toc-link ${cur.lesson === l.id ? 'active' : ''}" data-ls="${l.id}" ${ok ? '' : 'disabled'}>
-            <span class="no">${l.no}</span><span>${tx(l.title)}</span><span class="st">${p.done[l.id] ? '✓' : ok ? '' : '…'}</span></button>`;
+          const ok = !!C.lessons[l.id], open = ok && unlocked(l.id);
+          return `<button class="toc-link ${cur.lesson === l.id ? 'active' : ''}" data-ls="${l.id}" ${open ? '' : 'disabled'}>
+            <span class="no">${l.no}</span><span>${tx(l.title)}</span><span class="st">${p.done[l.id] ? '✓' : !ok ? '…' : open ? '' : '🔒'}</span></button>`;
         }).join('')).join('');
     }
     toc.innerHTML = `<div class="lv-tabs">${levels}</div>${body}`;
@@ -286,7 +337,11 @@
     $('#cmtBody').innerHTML = `<h1>${tx(lv.title)}</h1>${tx(lv.intro)}
       <div class="roadmap">${lv.parts.map((part, k) => `<div class="rm-part"><div class="rm-head"><span class="rm-no">${L.T('Phần', 'Part')} ${k + 1}</span><b>${tx(part.title)}</b></div>
         <p class="muted">${tx(part.goal)}</p>
-        <ol class="rm-list">${part.lessons.map(l => `<li class="${C.lessons[l.id] ? 'ready' : ''}">${C.lessons[l.id] ? `<a href="#cmt/${l.id}">${L.T('Bài', 'Lesson')} ${l.no}. ${tx(l.title)}</a>` : `<span>${L.T('Bài', 'Lesson')} ${l.no}. ${tx(l.title)}</span> <span class="tag">${L.T('đang biên soạn', 'in preparation')}</span>`}${p.done[l.id] ? ' <span class="up">✓</span>' : ''}</li>`).join('')}</ol></div>`).join('')}</div>`;
+        <ol class="rm-list">${part.lessons.map(l => {
+          const ok = !!C.lessons[l.id], open = ok && unlocked(l.id), name = `${L.T('Bài', 'Lesson')} ${l.no}. ${tx(l.title)}`;
+          const status = p.done[l.id] ? ` <span class="up">✓ ${p.quiz[l.id]}%</span>` : !ok ? ` <span class="tag">${L.T('đang biên soạn', 'in preparation')}</span>` : open ? ` <span class="tag">${L.T('đang học', 'current')}</span>` : ' 🔒';
+          return `<li class="${open ? 'ready' : ''}">${open ? `<a href="#cmt/${l.id}">${name}</a>` : `<span>${name}</span>`}${status}</li>`;
+        }).join('')}</ol></div>`).join('')}</div>`;
   }
 
   function renderLesson(id) {
@@ -297,6 +352,13 @@
     const all = lessonList(cur.level), k = all.findIndex(l => l.id === id);
     const prev = all.slice(0, k).reverse().find(l => C.lessons[l.id]), next = all.slice(k + 1).find(l => C.lessons[l.id]);
     const p = prog();
+    if (!unlocked(id)) {
+      $('#cmtBody').innerHTML = `<div class="locked"><div class="lk-icon">🔒</div><h1>${tx(meta.title)}</h1>
+        <p>${!levelUnlocked(cur.level) ? L.T(`Level ${cur.level} sẽ mở khoá khi bạn hoàn thành toàn bộ Level ${cur.level - 1}.`, `Level ${cur.level} unlocks after completing all of Level ${cur.level - 1}.`)
+          : L.T(`Bài này sẽ mở khoá khi bạn đạt ≥ 80% bài kiểm tra của <b>Bài ${prev.no}</b>.`, `This lesson unlocks when you score ≥ 80% on the <b>Lesson ${prev.no}</b> test.`)}</p>
+        ${prev && levelUnlocked(cur.level) ? `<a class="btn primary" href="#cmt/${prev.id}">← ${L.T('Về Bài', 'Go to Lesson')} ${prev.no}</a>` : ''}</div>`;
+      return;
+    }
     $('#cmtBody').innerHTML = `
       <div class="lesson-meta">CMT Level ${cur.level} · ${L.T('Bài', 'Lesson')} ${meta.no} ${p.done[id] ? '<span class="up">✓ ' + L.T('đã hoàn thành', 'completed') + '</span>' : ''}</div>
       <h1>${tx(meta.title)}</h1>
@@ -304,18 +366,17 @@
       <div class="lesson-body">${c.body()}</div>
       <div class="keys"><h2>${L.T('Ghi nhớ cốt lõi', 'Key takeaways')}</h2><ol>${c.keys.map(x => `<li>${x}</li>`).join('')}</ol></div>
       ${c.terms && c.terms.length ? `<div class="terms"><h2>${L.T('Thuật ngữ', 'Terms')}</h2><table class="tbl"><tbody>${c.terms.map(t => `<tr><td><b>${t[0]}</b></td><td>${t[1]}</td></tr>`).join('')}</tbody></table></div>` : ''}
-      ${quizHtml(id, c.quiz)}
+      ${quizHtml(id)}
       <div class="lesson-nav">${prev ? `<a class="btn" href="#cmt/${prev.id}">← ${L.T('Bài', 'Lesson')} ${prev.no}</a>` : '<span></span>'}
-        <button class="btn" data-done>${p.done[id] ? L.T('Bỏ đánh dấu hoàn thành', 'Unmark complete') : L.T('Đánh dấu đã học', 'Mark as studied')}</button>
-        ${next ? `<a class="btn primary" href="#cmt/${next.id}">${L.T('Bài', 'Lesson')} ${next.no} →</a>` : '<span></span>'}</div>`;
+        ${next ? (p.done[id] ? `<a class="btn primary" href="#cmt/${next.id}">${L.T('Bài', 'Lesson')} ${next.no} →</a>` : `<span class="btn" data-nextnav disabled>🔒 ${L.T('Bài', 'Lesson')} ${next.no} — ${L.T('cần đạt ≥ 80%', 'need ≥ 80%')}</span>`) : '<span></span>'}</div>`;
     const body = $('#cmtBody');
     bindQuiz(body);
-    body.querySelector('[data-done]').onclick = () => { const q = prog(); q.done[id] = !q.done[id]; saveProg(q); renderLesson(id); renderToc(); };
     body.querySelectorAll('[data-demo]').forEach(box => { const f = C.demoRun[box.dataset.demo]; if (f) f(box); });
   }
 
   /** Entry point from the router: sub = '' | 'l1' | 'l1-01' */
   C.render = function (sub) {
+    if (C.applyExtra) C.applyExtra();
     if (sub && /^l\d$/.test(sub)) { cur.level = +sub[1]; cur.lesson = null; }
     else if (sub && C.lessons[sub]) { cur.level = +sub[1]; cur.lesson = sub; }
     else if (!sub) { cur.lesson = null; }
