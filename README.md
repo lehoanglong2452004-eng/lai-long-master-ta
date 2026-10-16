@@ -1,7 +1,8 @@
-# Lai Long Master Wyckoff
+# Lai Long Master TA
 
-Hệ thống phân tích **Wyckoff & VSA đa khung** (2W · 1W · 1D · 4H · 1H · 30m · 15m · 5m · 1m), gồm:
+Hệ thống **phân tích kỹ thuật** gồm hai mảng: (1) phân tích **Wyckoff & VSA đa khung** (2W · 1W · 1D · 4H · 1H · 30m · 15m · 5m · 1m), gồm:
 
+- **Giáo trình ôn luyện CMT** (Level 1 → 3) do Lai Long Master TA tự biên soạn theo cách hiểu riêng, bám khung kiến thức CMT: lộ trình bài học, mục tiêu, nội dung, sơ đồ tự vẽ, demo trên dữ liệu thật, ghi nhớ, thuật ngữ và câu hỏi tự kiểm tra (đạt ≥ 80% mới qua bài). Đây là tài liệu học tập độc lập, không liên kết với CMT Association.
 - **Thư viện kiến thức Wyckoff gốc** (song ngữ Việt/Anh). Nội dung gồm: Composite Man, 3 luật (Cung–Cầu, Nhân–Quả và đếm P&F, Nỗ lực–Kết quả), quy trình 5 bước, các sự kiện và 5 pha của tích lũy/phân phối, sơ đồ #1 và #2, tái tích lũy/tái phân phối, 3 loại Spring, UTAD, Creek/Ice, JAC/BU, 9 phép thử Mua/Bán, các mẫu nến VSA, ma trận nỗ lực–kết quả, luật đa khung, quản trị lệnh và đặc thù thị trường Việt Nam.
 - **Máy phân tích tự động trên dữ liệu thật**:
   - Nhận diện Trading Range và các sự kiện PS/SC/AR/ST/Spring/UTAD/SOS/LPS/SOW/LPSY.
@@ -79,6 +80,8 @@ Nếu muốn làm chuyên nghiệp hơn, cài **GitHub Desktop** (https://deskto
 | `js/narrative.js` | Viết "luận Wyckoff" một khung và đa khung |
 | `js/chart.js` | Biểu đồ (TradingView Lightweight Charts) và dải pha |
 | `js/knowledge.js`, `js/schematics.js` | Thư viện kiến thức và sơ đồ SVG tự vẽ |
+| `js/cmt.js` | Khu vực CMT: lộ trình, bài học, tiến độ, câu hỏi, demo |
+| `js/cmt-level1.js` | Nội dung CMT Level 1 |
 | `js/app.js` | Điều hướng, các tab, checklist |
 
 ## Nguồn dữ liệu
@@ -87,4 +90,4 @@ Nếu muốn làm chuyên nghiệp hơn, cài **GitHub Desktop** (https://deskto
 - **CSV**: do người dùng tự nạp.
 
 ## Ghi công
-Biểu đồ sử dụng [TradingView Lightweight Charts™](https://www.tradingview.com/lightweight-charts/) (giấy phép Apache 2.0). Kiến thức dựa trên phương pháp gốc của Richard D. Wyckoff (1873–1934). Toàn bộ nội dung và sơ đồ trong ứng dụng được biên soạn và vẽ lại riêng cho Lai Long Master Wyckoff.
+Biểu đồ sử dụng [TradingView Lightweight Charts™](https://www.tradingview.com/lightweight-charts/) (giấy phép Apache 2.0). Kiến thức dựa trên phương pháp gốc của Richard D. Wyckoff (1873–1934). Toàn bộ nội dung và sơ đồ trong ứng dụng được biên soạn và vẽ lại riêng cho Lai Long Master TA.

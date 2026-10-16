@@ -3,7 +3,7 @@
   'use strict';
   const $ = s => document.querySelector(s);
   const W = L.wy, N = L.narr;
-  const VIEWS = ['analysis', 'mtf', 'knowledge', 'checklist', 'guide'];
+  const VIEWS = ['analysis', 'mtf', 'knowledge', 'cmt', 'checklist', 'guide'];
   const INDEXES = /^(VNINDEX|VN30|HNXINDEX|HNX30|UPCOMINDEX|VN30F\w*)$/;
 
   const defaults = { market: 'vn_stock', symbol: 'HPG', tf: '1D', view: 'analysis', vsa: true, phases: true, events: true, mtfTfs: L.TFS.slice(), theme: 'dark', kb: 'intro' };
@@ -55,6 +55,7 @@
     renderNav();
     renderControls();
     if (st.view === 'knowledge') renderKB();
+    if (st.view === 'cmt') { if (sub) st.cmt = sub; L.cmt.render(st.cmt || ''); save(); }
     if (st.view === 'checklist') renderChecklist();
     if (st.view === 'guide') renderGuide();
     if (st.view === 'analysis') {
@@ -431,10 +432,14 @@
     if (single) renderSingle(false);
     if (mtf) recomputeMTF(); else if (st.view === 'mtf') renderMTFEmpty();
     if (st.view === 'knowledge') renderKB();
+    if (st.view === 'cmt') L.cmt.render(st.cmt || '');
     if (st.view === 'checklist') renderChecklist();
     if (st.view === 'guide') renderGuide();
   };
-  $('#themeBtn').onclick = () => { st.theme = st.theme === 'dark' ? 'light' : 'dark'; save(); applyTheme(); };
+  $('#themeBtn').onclick = () => {
+    st.theme = st.theme === 'dark' ? 'light' : 'dark'; save(); applyTheme();
+    if (st.view === 'cmt') L.cmt.render(st.cmt || ''); // demo charts read theme colours at creation
+  };
   window.addEventListener('hashchange', route);
   applyTheme();
   applyLang();

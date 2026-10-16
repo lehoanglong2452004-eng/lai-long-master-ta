@@ -39,7 +39,7 @@ window.LLW = (function () {
   /* ---------- UI dictionary ---------- */
   L.dict = {
     vi: {
-      nav_analysis: 'Phân tích', nav_mtf: 'Đa khung', nav_knowledge: 'Kiến thức', nav_checklist: 'Checklist', nav_guide: 'Hướng dẫn',
+      nav_analysis: 'Phân tích', nav_mtf: 'Đa khung', nav_knowledge: 'Wyckoff', nav_cmt: 'CMT', nav_checklist: 'Checklist', nav_guide: 'Hướng dẫn',
       market: 'Thị trường', symbol: 'Mã', timeframe: 'Khung', analyze: 'Phân tích', scan: 'Quét đa khung',
       csv_pick: 'Chọn file CSV', csv_loaded: 'Đã nạp', loading: 'Đang tải dữ liệu…', show_vsa: 'Tín hiệu VSA', show_phase: 'Pha Wyckoff', show_events: 'Sự kiện',
       summary: 'Tổng quan Wyckoff', structure: 'Cấu trúc', phase: 'Pha', bias: 'Thiên hướng', trend: 'Xu hướng', levels: 'Các mức giá',
@@ -54,7 +54,7 @@ window.LLW = (function () {
       csv_hint: 'File CSV cần cột thời gian, Open, High, Low, Close, Volume (hỗ trợ xuất từ MT4/MT5, TradingView).'
     },
     en: {
-      nav_analysis: 'Analysis', nav_mtf: 'Multi-TF', nav_knowledge: 'Knowledge', nav_checklist: 'Checklist', nav_guide: 'Guide',
+      nav_analysis: 'Analysis', nav_mtf: 'Multi-TF', nav_knowledge: 'Wyckoff', nav_cmt: 'CMT', nav_checklist: 'Checklist', nav_guide: 'Guide',
       market: 'Market', symbol: 'Symbol', timeframe: 'Timeframe', analyze: 'Analyze', scan: 'Scan all timeframes',
       csv_pick: 'Choose CSV file', csv_loaded: 'Loaded', loading: 'Loading data…', show_vsa: 'VSA signals', show_phase: 'Wyckoff phases', show_events: 'Events',
       summary: 'Wyckoff overview', structure: 'Structure', phase: 'Phase', bias: 'Bias', trend: 'Trend', levels: 'Key levels',
