@@ -329,3 +329,7 @@ textarea { width: 100%; min-height: 140px; background: var(--panel2); border: 1p
 .demo-head .d-num { width: 92px; background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 5px 8px; font-family: 'JetBrains Mono', monospace; }
 .demo-calc:empty { display: none; }
 .demo .demo-out .tbl { margin: 4px 0 8px; }
+
+.rr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.rr-grid .demo-chart { height: 260px; }
+@media (max-width: 640px) { .rr-grid { grid-template-columns: 1fr; } }
