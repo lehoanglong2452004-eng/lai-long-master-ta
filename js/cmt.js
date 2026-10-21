@@ -121,12 +121,17 @@
   }
 
   /* ---------- unlock rules ---------- */
+  // teacher/preview mode: open the site once with ?gv=1 (off with ?gv=0) to browse every lesson without unlocking
+  (function () { const m = location.search.match(/[?&]gv=(\d)/); if (m) L.store.set('cmt.teacher', m[1] === '1'); })();
+  const teacher = () => !!L.store.get('cmt.teacher', false);
+  C.teacher = teacher;
   function levelUnlocked(n) {
-    if (n === 1) return true;
+    if (n === 1 || teacher()) return true;
     const prev = lessonList(n - 1), p = prog();
     return prev.length > 0 && prev.every(l => p.done[l.id]);
   }
   function unlocked(id) {
+    if (teacher()) return true;
     const level = +id[1];
     if (!levelUnlocked(level)) return false;
     const all = lessonList(level), k = all.findIndex(l => l.id === id);
@@ -326,7 +331,7 @@
             <span class="no">${l.no}</span><span>${tx(l.title)}</span><span class="st">${p.done[l.id] ? '✓' : !ok ? '…' : open ? '' : '🔒'}</span></button>`;
         }).join('')).join('');
     }
-    toc.innerHTML = `<div class="lv-tabs">${levels}</div>${body}`;
+    toc.innerHTML = `<div class="lv-tabs">${levels}</div>${teacher() ? `<div class="tag" style="display:block;margin:0 2px 8px">👨‍🏫 ${L.T('Chế độ giảng viên: mở toàn bộ bài', 'Teacher mode: all lessons open')}</div>` : ''}${body}`;
     toc.querySelectorAll('[data-lv]').forEach(b => b.onclick = () => { location.hash = 'cmt/l' + b.dataset.lv; });
     toc.querySelectorAll('[data-ls]').forEach(b => b.onclick = () => { location.hash = 'cmt/' + (b.dataset.ls || 'l' + cur.level); });
   }
