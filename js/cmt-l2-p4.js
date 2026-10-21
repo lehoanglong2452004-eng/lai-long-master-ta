@@ -46,7 +46,7 @@
   };
 
   /* ---------- demo: correlation lab ---------- */
-  H.corrLab = () => C.demoShell('corrLab', C.symControls('bn_spot', 'BTCUSDT', '1D', ['1W', '1D', '4H']) + `<input class="d-sym2" value="ETHUSDT" spellcheck="false">` + C.mkSel('d-n', [['20', L.T('Lăn 20', 'Rolling 20')], ['60', L.T('Lăn 60', 'Rolling 60')]], '60') + `<button class="btn primary d-go">${L.T('Xem', 'Show')}</button>`,
+  H.corrLab = (a = 'BTCUSDT', b = 'ETHUSDT', mk = 'bn_spot', tf = '1D') => C.demoShell('corrLab', C.symControls(mk, a, tf, ['1W', '1D', '4H', '1H', '15m']) + `<input class="d-sym2" value="${b}" spellcheck="false">` + C.mkSel('d-n', [['20', L.T('Lăn 20', 'Rolling 20')], ['60', L.T('Lăn 60', 'Rolling 60')]], '60') + `<button class="btn primary d-go">${L.T('Xem', 'Show')}</button>`,
     L.T('So sánh hai mã cùng thị trường: tương quan của <b>lợi suất</b> (đúng) với tương quan của <b>giá</b> (dễ giả tạo), beta và tương quan lăn.', 'Two symbols in one market: correlation of <b>returns</b> (proper) vs of <b>prices</b> (prone to spuriousness), beta and rolling correlation.'));
   C.demoRun.corrLab = box => {
     const out = box.querySelector('.demo-out'), el = box.querySelector('.demo-chart');
