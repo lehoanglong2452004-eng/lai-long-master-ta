@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* CMT Level 2 — Part 6, lessons 33–37: designing and testing trading systems. Written by Lai Long Master TA in its own words. */
 (function (L) {
   'use strict';

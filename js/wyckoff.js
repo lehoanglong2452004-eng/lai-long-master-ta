@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* Wyckoff structure engine: trading range, events, phases, bias, cause (P&F), scenarios */
 (function (L) {
   'use strict';

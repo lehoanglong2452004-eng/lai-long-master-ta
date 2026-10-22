@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* VSA bar reading: spread, close location and volume relative to background */
 (function (L) {
   'use strict';

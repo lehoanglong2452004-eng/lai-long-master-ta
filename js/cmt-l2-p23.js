@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* CMT Level 2 — Parts 2–3, lessons 15–22: volatility and behavioural finance. Written by Lai Long Master TA in its own words. */
 (function (L) {
   'use strict';

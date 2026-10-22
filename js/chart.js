@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* Chart rendering with TradingView Lightweight Charts v4 + Wyckoff overlays */
 (function (L) {
   'use strict';

@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* CMT Level 2 — roadmap and lesson helper. Study notes written by Lai Long Master TA in its own words,
    following the Level 2 body of knowledge. Not affiliated with the CMT Association. */
 (function (L) {

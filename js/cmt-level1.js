@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* CMT Level 1 — study notes written by Lai Long Master TA in its own words, following the Level 1 body of knowledge.
    Not affiliated with, nor reproduced from, the CMT Association or its publishers. */
 (function (L) {

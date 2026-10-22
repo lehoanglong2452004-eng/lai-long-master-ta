@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* CMT Level 1 — two additional (harder, applied) self-check questions per lesson, bringing each to 10. Written by Lai Long Master TA. */
 (function (L) {
   'use strict';
