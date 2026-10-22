@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* Lai Long Master Wyckoff — core: namespace, storage, i18n, formatting */
 window.LLW = (function () {
   'use strict';

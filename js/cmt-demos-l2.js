@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* CMT Level 2 — indicator lab and trend-system tester (live data) */
 (function (L) {
   'use strict';

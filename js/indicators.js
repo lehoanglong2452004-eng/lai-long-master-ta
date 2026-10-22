@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* Indicators: ATR, moving averages, bar enrichment, zigzag swings, wave legs, Point & Figure */
 (function (L) {
   'use strict';

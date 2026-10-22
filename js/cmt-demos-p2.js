@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* CMT Level 1 Part II — candlestick figure helper and live demos */
 (function (L) {
   'use strict';

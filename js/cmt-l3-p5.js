@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* CMT Level 3 — Part 5, lessons 25–27: volatility analysis. Written by Lai Long Master TA in its own words. */
 (function (L) {
   'use strict';

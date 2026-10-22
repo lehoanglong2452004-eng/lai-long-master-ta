@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* Original SVG schematics for the knowledge library (drawn from coordinates, themed by CSS variables) */
 (function (L) {
   'use strict';

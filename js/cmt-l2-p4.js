@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* CMT Level 2 — Part 4, lessons 23–26: statistics for technicians. Written by Lai Long Master TA in its own words. */
 (function (L) {
   'use strict';

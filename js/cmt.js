@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* CMT study area: curriculum roadmap, lesson pages, progress, self-check quizzes, figures and live demos */
 (function (L) {
   'use strict';

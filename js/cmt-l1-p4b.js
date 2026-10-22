@@ -1,3 +1,4 @@
+// © 2026 Lai Long Master TA. Bảo lưu mọi quyền. Không sao chép, chỉnh sửa hay dùng lại khi chưa được phép.
 /* CMT Level 1 — Part IV (b), lessons 22–26: ETPs, FX, options, implied volatility, VIX. Written by Lai Long Master TA in its own words. */
 (function (L) {
   'use strict';
